@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: circleci/node:16  # Use the appropriate Node.js version for your project
+      - image: circleci/node:18  # Updated to a compatible Node.js version
     working_directory: ~/repo
 
 jobs:
@@ -13,20 +13,20 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies
-          command: npm install
+          command: npm ci
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Run tests
           command: npm test
       - run:
           name: Generate coverage report
-          command: npm run coverage  # Ensure you have a coverage script in your package.json
+          command: npm run coverage
       - store_artifacts:
           path: coverage
           destination: coverage
