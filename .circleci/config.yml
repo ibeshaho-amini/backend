@@ -5,7 +5,7 @@ executors:
     docker:
       - image: circleci/node:16.20.1
     working_directory: ~/repo
-    
+
 jobs:
   test:
     executor: node-executor
@@ -15,8 +15,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
       - run:
+          name: Check Node.js Version
+          command: node -v
+      - run:
           name: Install dependencies
-          command: npm ci --legacy-peer-deps
+          command: npm ci
       - save_cache:
           paths:
             - node_modules
@@ -32,7 +35,6 @@ jobs:
           destination: coverage
       - store_test_results:
           path: test-results
-
 
 workflows:
   test_and_build:
