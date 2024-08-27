@@ -1,8 +1,14 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:16.20.1
+    working_directory: ~/repo
+
 jobs:
   test:
     executor: node-executor
-    environment:
-      MONGOMS_SKIP_POSTINSTALL: "true"
     steps:
       - checkout
       - restore_cache:
@@ -26,3 +32,8 @@ jobs:
           destination: coverage
       - store_test_results:
           path: test-results
+
+workflows:
+  test_and_build:
+    jobs:
+      - test
