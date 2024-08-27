@@ -5,10 +5,11 @@ executors:
     docker:
       - image: circleci/node:16.20.1
     working_directory: ~/repo
-
 jobs:
   test:
     executor: node-executor
+    environment:
+      MONGOMS_SKIP_POSTINSTALL: "true"
     steps:
       - checkout
       - restore_cache:
