@@ -1,0 +1,50 @@
+{
+  "name": "learn-express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --coverage",
+    "coverage": "jest --coverage --ci",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "clover"
+    ]
+  },
+  "keywords": [],
+  "author": "amini",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.3.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pino": "^9.3.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "coveralls": "^3.1.1",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.0.0",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run tests
+          command: npm test -- --coverage
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
+      - run:
+          name: Upload coverage to Coveralls
+          command: ./node_modules/.bin/coveralls < coverage/lcov.info
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
