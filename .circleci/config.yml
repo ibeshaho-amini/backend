@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: circleci/node:18  # Updated to a compatible Node.js version
+      - image: circleci/node:16.20.1
     working_directory: ~/repo
 
 jobs:
@@ -34,7 +34,6 @@ jobs:
           path: test-results
 
 workflows:
-  version: 2
   test_and_build:
     jobs:
       - test
