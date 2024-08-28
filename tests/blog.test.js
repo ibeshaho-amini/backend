@@ -7,7 +7,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 describe('Blog API', () => {
     let blog_id;
     let comment_id;
-    const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzczOGY4NzFmMDljNzEzOTJkMjdkMiIsImlhdCI6MTcyNDc0NzczOSwiZXhwIjoxNzI0NzcyOTM5fQ.qJ0M29yQSJDMT3OfCrDREnkq_4BQqpAFnJWnJeBUam8`;
+    const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzczOGY4NzFmMDljNzEzOTJkMjdkMiIsImlhdCI6MTcyNDgyNzExOCwiZXhwIjoxNzI0OTEzNTE4fQ.Suklu3J4IwvjSDLnpazhWbLIwIrIewHyNs5-ptPRWtU`;
   let mongoServer;
 
   beforeAll(async () => {

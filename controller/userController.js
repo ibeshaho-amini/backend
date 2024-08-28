@@ -48,7 +48,7 @@ exports.loginUser = async (req, res) => {
         }
 
         const payload = { id: user._id, username: user.username };
-        const token = jwt.sign(payload, jwtSecret, { expiresIn: '7h' });
+        const token = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
 
         res.send({ token: `Bearer ${token}` });
     } catch (error) {

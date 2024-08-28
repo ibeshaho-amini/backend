@@ -6,7 +6,8 @@
     "start": "node index.js",
     "test": "jest --coverage",
     "coverage": "jest --coverage --ci",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "install": "npm install --ignore-scripts mongodb-memory-server && node ./scripts/custom-install.js"
   },
   "jest": {
     "testEnvironment": "node",
