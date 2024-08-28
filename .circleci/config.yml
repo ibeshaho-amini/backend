@@ -3,52 +3,39 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: circleci/node:16.20.1
-    working_directory: ~/repo
+      - image: cimg/node:16.20
 
 jobs:
-  test:
+  install_dependencies:
     executor: node-executor
     steps:
       - checkout
-      
       - run:
-          name: Check Node.js Version
-          command: node -v
-          
+          name: Install Dependencies
+          command:  |
+            cd blogs-backend
+            rm -rf node_modules
+            npm instal
+
+  run_tests:
+    executor: node-executor
+    steps:
+      - checkout
       - run:
-          name: Clear npm Cache
-          command: npm cache clean --force
-          
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            
+          name: Change to Backend Directory
+          command: cd blogs-backend
       - run:
-          name: Install dependencies
-          command: npm ci
-          
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
-          
-      - run:
-          name: Run tests
-          command: npm test
-          
-      - run:
-          name: Generate coverage report
-          command: npm run coverage
-          
-      - store_artifacts:
-          path: coverage
-          destination: coverage
-          
-      - store_test_results:
-          path: test-results
+          name: Run Tests
+          command:  |
+            cd blogs-backend
+            chmod +x ./node_modules/.bin/jest
+             npx jest --coverage --no-cache
 
 workflows:
-  test_and_build:
+  version: 2
+  build_and_test:
     jobs:
-      - test
+      - install_dependencies
+      - run_tests:
+          requires:
+            - install_dependencies
