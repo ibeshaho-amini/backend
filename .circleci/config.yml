@@ -1,3 +1,4 @@
+circle ci
 version: 2.1
 
 executors:
@@ -27,7 +28,6 @@ jobs:
       - run:
           name: Run Tests
           command:  |
-            cd blogs-backend
             chmod +x ./node_modules/.bin/jest
              npx jest --coverage --no-cache
 
