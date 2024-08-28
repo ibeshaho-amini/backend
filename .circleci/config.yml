@@ -14,7 +14,7 @@ jobs:
           name: Install Dependencies
           command: |
             rm -rf node_modules
-            npm install
+            npm install --ignore-scripts
 
   run_tests:
     executor: node-executor
