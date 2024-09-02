@@ -41,7 +41,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Connect to MongoDB and start the server
 if (process.env.NODE_ENV !== 'test') {
-    mongoose.connect("mongodb+srv://aminibeshaho:Ibeshaho@123@cluster0.vrp96.mongodb.net/blogs_db?retryWrites=true&w=majority&appName=Cluster0")
+    mongoose.connect("mongodb+srv://aminibeshaho:Ibeshaho@123@cluster0.mongodb.net/blogs_db?retryWrites=true&w=majority")
     .then(() => {
         app.listen(5000, () => {
             console.log("Server has started on port 5000!");
