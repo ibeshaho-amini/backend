@@ -21,12 +21,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Change to Backend Directory
-      - run:
           name: Run Tests
           command:  |
             chmod +x ./node_modules/.bin/jest
-             npx jest --coverage --no-cache
+            npx jest --coverage --no-cache
 
 workflows:
   version: 2
