@@ -25,11 +25,6 @@ jobs:
           command: |
             chmod +x ./node_modules/.bin/jest
             npx jest --coverage --no-cache
-      - run:
-          name: Upload Coverage to Coveralls
-          command: |
-            chmod +x ./node_modules/.bin/coveralls
-            npx coveralls < coverage/lcov.info
 
 workflows:
   build_and_test:
