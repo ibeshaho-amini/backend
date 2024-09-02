@@ -13,7 +13,6 @@ jobs:
       - run:
           name: Install Dependencies
           command:  |
-            cd backendd
             rm -rf node_modules
             npm instal
 
@@ -23,11 +22,9 @@ jobs:
       - checkout
       - run:
           name: Change to Backend Directory
-          command: cd backendd
       - run:
           name: Run Tests
           command:  |
-            cd backendd
             chmod +x ./node_modules/.bin/jest
              npx jest --coverage --no-cache
 
