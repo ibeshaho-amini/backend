@@ -38,6 +38,7 @@ jobs:
       - run:
           name: Upload to Coveralls
           command: |
+            chmod +x ./node_modules/.bin/coveralls
             npx coveralls < ./coverage/lcov.info
 
 workflows:
