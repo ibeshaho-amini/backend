@@ -21,10 +21,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Jest Globally (if needed)
+          command: npm install -g jest
+      - run:
           name: Run Tests
           command: |
-            chmod +x ./node_modules/.bin/jest
-            npx jest --coverage --no-cache
+            cd blogs-backend
+            npx jest --coverage --no-cache --verbose
+
 
 workflows:
   build_and_test:
