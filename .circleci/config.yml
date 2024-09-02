@@ -25,6 +25,21 @@ jobs:
           command: |
             chmod +x ./node_modules/.bin/jest
             npx jest --coverage --no-cache
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+      - store_test_results:
+          path: test-results
+
+  upload_coveralls:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Upload to Coveralls
+          command: |
+            chmod +x ./node_modules/.bin/coveralls
+            npx coveralls < ./coverage/lcov.info
 
 workflows:
   build_and_test:
@@ -33,3 +48,6 @@ workflows:
       - run_tests:
           requires:
             - install_dependencies
+      - upload_coveralls:
+          requires:
+            - run_tests
