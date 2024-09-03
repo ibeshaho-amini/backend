@@ -10,14 +10,24 @@ describe('Blog API', () => {
     const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzczOGY4NzFmMDljNzEzOTJkMjdkMiIsImlhdCI6MTcyNTMwNDU2NSwiZXhwIjoxNzI1MzkwOTY1fQ.GSKFbpm0B58oznonGDcfz_J51TWMno7vErTHwW0JhZE`;
   let mongoServer;
 
-  beforeAll(async () => {
+  beforeAll(async () => {    
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    await mongoose.connect(mongoUri);
-  });
-
+    
+    
+    if (mongoose.connection.readyState !== 0) {
+     
+      await mongoose.disconnect();
+    }
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+})
   afterAll(async () => {
-    await mongoose.disconnect();
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.disconnect();
+    }
     await mongoServer.stop();
   });
 

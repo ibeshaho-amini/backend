@@ -24,12 +24,9 @@ const { createUser, loginUser } = require('./controller/userController');
  *           schema:
  *             type: object
  *             required:
- *               - username
  *               - email
  *               - password
  *             properties:
- *               username:
- *                 type: string
  *               email:
  *                 type: string
  *                 format: email

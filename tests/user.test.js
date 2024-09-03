@@ -1,37 +1,4 @@
-// const request = require('supertest');
-// const app = require('../index'); 
 
-// const mongoose = require('mongoose');
-// const { MongoMemoryServer } = require('mongodb-memory-server');
-
-// describe('User API', () => {
-//   let mongoServer;
-
-//   beforeAll(async () => {
-//     mongoServer = await MongoMemoryServer.create();
-//     const mongoUri = mongoServer.getUri();
-//     await mongoose.connect(mongoUri);
-//   });
-
-//   afterAll(async () => {
-//     await mongoose.disconnect();
-//     await mongoServer.stop();
-//   });
-
-//     it('should create a new user', async () => {
-//         const res= await request(app)
-//           .post('/api/users')
-//           .send({
-//             email: 'amina@gmail.com',
-//             password: 'amina123',
-//           });
-    
-//         expect(201);
-//         expect(res.body).toHaveProperty('email', 'amina@gmail.com');
-//       }, 30000);
-
-      
-//     });
 
 const request = require('supertest');
 const app = require('../index'); 
@@ -42,16 +9,27 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 describe('User API', () => {
   let mongoServer;
 
-  beforeAll(async () => {
+  beforeAll(async () => {    
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    await mongoose.connect(mongoUri);
-  });
+    
+    
+    if (mongoose.connection.readyState !== 0) {
+     
+      await mongoose.disconnect();
+    }
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+})
 
-  afterAll(async () => {
+afterAll(async () => {
+  if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
-    await mongoServer.stop();
-  });
+  }
+  await mongoServer.stop();
+});
 
   it('should create a new user', async () => {
     const res = await request(app)
