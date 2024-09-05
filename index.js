@@ -22,9 +22,24 @@ const swaggerOptions = {
         url: 'http://localhost:5000/api',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ['./userRoutes.js', './blogRoutes.js'], // Paths to the route files
 };
+
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
@@ -41,14 +56,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Connect to MongoDB and start the server
 if (process.env.NODE_ENV !== 'test') {
-  mongoose.connect("mongodb+srv://aminibeshaho:Ibeshaho%40123@cluster0.vrp96.mongodb.net/blogs_db?retryWrites=true&w=majority&appName=Cluster0")
-  .then(() => {
-      app.listen(5000, () => {
-          console.log("Server has started on port 5000!");
-          console.log('Swagger docs are available on http://localhost:5000/api-docs');
-      });
-  })
-  .catch(err => console.error('Could not connect to MongoDB...', err));
+    mongoose.connect("mongodb://localhost:27017/blog")
+    .then(() => {
+        app.listen(5000, () => {
+            console.log("Server has started on port 5000!");
+            console.log('Swagger docs are available on http://localhost:5000/api-docs');
+        });
+    })
+    .catch(err => console.error('Could not connect to MongoDB...', err));
 }
 
-module.exports = app; 
+module.exports = app;  // Export the app for testing
