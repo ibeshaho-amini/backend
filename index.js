@@ -9,7 +9,12 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const app = express();
 const cors = require('cors');
 
-app.use(cors({ origin: '*' }));
+// app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: '*',
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
 // Swagger configuration
 const swaggerOptions = {
   definition: {
@@ -21,7 +26,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000/api',
+        url: 'https://backend-6-w9mf.onrender.com/api',
       },
     ],
     components: {
