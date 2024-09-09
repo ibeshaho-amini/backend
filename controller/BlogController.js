@@ -29,38 +29,6 @@ exports.createBlog = async (req, res) => {
 };
 
 
-// exports.uploadImageToBlog = async (req, res) => {
-//     if (req.file === undefined) {
-//       return res.status(400).json({ err: 'Please select an image' });
-//     }
-  
-//     try {
-//       const result = await cloudinary.uploader.upload(req.file.path, {
-//         folder: "Posts"
-//       });
-  
-//       const post = await Post.findById({_id: req.params.id});
-      
-//       if (!post) {
-//         return res.status(404).json({ message: 'Post not found' });
-//       }
-  
-//       post.image = result.secure_url;
-//       post.public_id = result.public_id;
-//       await post.save();
-  
-//       await fs.unlink(req.file.path);
-  
-//       return res.status(200).json({
-//         message: 'Image uploaded successfully',
-//         id: post._id,
-//         image: post.image
-//       });
-//     } catch (error) {
-//       console.error(error);
-//       return res.status(500).json({ message: 'Server error', error: error.message});
-//     }
-//   };
 
 exports.uploadImageToBlog = async (req, res) => {
     if (!req.file) {
