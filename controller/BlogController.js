@@ -29,9 +29,42 @@ exports.createBlog = async (req, res) => {
 };
 
 
+// exports.uploadImageToBlog = async (req, res) => {
+//     if (req.file === undefined) {
+//       return res.status(400).json({ err: 'Please select an image' });
+//     }
+  
+//     try {
+//       const result = await cloudinary.uploader.upload(req.file.path, {
+//         folder: "Posts"
+//       });
+  
+//       const post = await Post.findById({_id: req.params.id});
+      
+//       if (!post) {
+//         return res.status(404).json({ message: 'Post not found' });
+//       }
+  
+//       post.image = result.secure_url;
+//       post.public_id = result.public_id;
+//       await post.save();
+  
+//       await fs.unlink(req.file.path);
+  
+//       return res.status(200).json({
+//         message: 'Image uploaded successfully',
+//         id: post._id,
+//         image: post.image
+//       });
+//     } catch (error) {
+//       console.error(error);
+//       return res.status(500).json({ message: 'Server error', error: error.message});
+//     }
+//   };
+
 exports.uploadImageToBlog = async (req, res) => {
-    if (req.file === undefined) {
-      return res.status(400).json({ err: 'Please select an image' });
+    if (!req.file) {
+      return res.status(400).json({ error: 'Please select an image' });
     }
   
     try {
@@ -40,7 +73,7 @@ exports.uploadImageToBlog = async (req, res) => {
       });
   
       const post = await Post.findById(req.params.id);
-      
+  
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
       }
@@ -49,7 +82,7 @@ exports.uploadImageToBlog = async (req, res) => {
       post.public_id = result.public_id;
       await post.save();
   
-      await fs.unlink(req.file.path);
+      await fs.unlink(req.file.path);  // Removes file from local storage
   
       return res.status(200).json({
         message: 'Image uploaded successfully',
@@ -57,10 +90,11 @@ exports.uploadImageToBlog = async (req, res) => {
         image: post.image
       });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Server error' });
+      console.error('Upload Error:', error);  // Log the error here
+      return res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
+  
 
 exports.getBlogs = async (req, res) => {
     try {

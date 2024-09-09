@@ -26,7 +26,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://backend-6-w9mf.onrender.com/api',
+         url: 'https://backend-6-w9mf.onrender.com/api',
       },
     ],
     components: {
