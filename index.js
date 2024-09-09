@@ -24,11 +24,11 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API for Blog and User operations',
     },
-    servers: [
-      {
-         url: 'https://backend-6-w9mf.onrender.com/api',
-      },
-    ],
+    // servers: [
+    //   {
+    //      url: 'https://backend-6-w9mf.onrender.com/api',
+    //   },
+    // ],
     components: {
       securitySchemes: {
         bearerAuth: {
