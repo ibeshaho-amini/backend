@@ -53,7 +53,7 @@ exports.loginUser = async (req, res) => {
         // res.send({ token: `Bearer ${token}` });
         res.send({ 
             token: `Bearer ${token}`,
-            redirectTo: '/portfolio/adminiPanel' 
+            redirectTo: '/portfolio/adminiPanel.html' 
         });
         
     } catch (error) {
