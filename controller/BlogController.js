@@ -1,5 +1,6 @@
 const Post = require('../Models/Blogs');
 const Comments = require('../Models/Coments');
+const Like = require('../Models/like'); 
 const cloudinary = require('../cloudinary');
 const fs = require('fs').promises;
 const jwt = require('jsonwebtoken');
@@ -113,23 +114,51 @@ exports.createComment = async (req, res) => {
         const token = req.headers['authorization']?.split(' ')[1];
         if (!token) return res.status(401).send({ error: "No token provided" });
 
-        const decoded = jwt.verify(token, 'secret_key0987');
-        const userId = decoded.id;
-
-        const comment = new Comments({
-            like: req.body.like || 0,
-            blog_id: req.params.blog_id,
-            user_id: userId,
-            comment: req.body.comment,
-        });
-
-        await comment.save();
-        res.status(201).send(comment);
-    } catch (error) {
-        res.status(500).send({ error: "Error adding comment" });
+            const userId = req.user._id;
+            const { content} = req.body;
+            const postId = req.params.id;
+    
+            const comment = new Comment({
+                
+                postId, user: userId, content,
+            });
+    
+            await comment.save();
+    
+            res.status(201).json(comment);
+        } catch (error) {
+    
+                res.status(404)
+                res.send({ error: "Post doesn't exist!" })
+        }
     }
-};
-
+    exports.addlike = async (req, res) => {
+        console.log('Add like route hit');
+        try {
+            const userId = req.user._id;
+           const blogId = req.params.blog_id;
+      
+           const liked = new Like({blogId, user: userId,})
+        //   if (!userId) {
+        //     return res.status(400).json({ message: 'User ID is missing' });
+        //   }
+      
+        //   const liked = await Like.findOne({ blog_id: blogId, user_id: userId });
+      
+          if (liked) {
+            await Like.deleteOne({ _id: liked._id });
+            res.status(200).json({ message: 'Like removed' });
+          } else {
+            const newLike = new Like({ blog_id: blogId, user_id: userId, like: true });
+            await newLike.save();
+            res.status(201).json({ message: 'Like added', like: newLike });
+          }
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Server error' });
+        }
+      };
+      
 exports.updateLike = async (req, res) => {
     try {
         const token = req.headers['authorization']?.split(' ')[1];

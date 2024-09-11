@@ -9,6 +9,7 @@ const {
     updateBlog,
     deleteBlog,
     createComment,
+    addlike,
     getCommentsByBlogId,
     updateLike,
     uploadImageToBlog
@@ -206,8 +207,6 @@ router.delete('/blogs/:id', validateAuth, deleteBlog);
  *             properties:
  *               comment:
  *                 type: string
- *               like:
- *                 type: integer
  *     responses:
  *       201:
  *         description: The comment was added successfully.
@@ -240,6 +239,34 @@ router.post('/blogs/:blog_id/comments', validateAuth, createComment);
  *         description: No comments found for this blog.
  */
 router.get('/blogs/:blog_id/comments', getCommentsByBlogId);
+
+/**
+ * @swagger
+ * /blogs/{blog_id}/likes:
+ *   post:
+ *     summary: Add a like to a blog
+ *     tags: [Likes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: blog_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The blog ID
+ *     responses:
+ *       201:
+ *         description: The like was added successfully.
+ *       400:
+ *         description: Invalid input data.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Blog not found.
+ */
+router.post('/blogs/:blog_id/likes', validateAuth, addlike);
+
 
 /**
  * @swagger

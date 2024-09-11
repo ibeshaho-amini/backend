@@ -44,7 +44,6 @@ afterAll(async () => {
   }, 30000);
 
   it('should login the user and return a token', async () => {
-    // First, create the user
     await request(app)
       .post('/api/users')
       .send({
@@ -52,7 +51,6 @@ afterAll(async () => {
         password: 'amina123',
       });
 
-    // Then, login with the created user
     const res = await request(app)
       .post('/api/userLogin')
       .send({
@@ -62,6 +60,6 @@ afterAll(async () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('token');
-    expect(res.body.token).toMatch(/^Bearer /); // Check if token starts with 'Bearer '
+    expect(res.body.token).toMatch(/^Bearer /);
   }, 30000);
 });
