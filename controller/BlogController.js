@@ -32,36 +32,41 @@ exports.createBlog = async (req, res) => {
 
 exports.uploadImageToBlog = async (req, res) => {
     if (!req.file) {
-      return res.status(400).json({ error: 'Please select an image' });
+        return res.status(400).json({ error: 'Please select an image' });
     }
-  
     try {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "Posts"
-      });
-  
-      const post = await Post.findById(req.params.id);
-  
-      if (!post) {
-        return res.status(404).json({ message: 'Post not found' });
-      }
-  
-      post.image = result.secure_url;
-      post.public_id = result.public_id;
-      await post.save();
-  
-      await fs.unlink(req.file.path);  // Removes file from local storage
-  
-      return res.status(200).json({
-        message: 'Image uploaded successfully',
-        id: post._id,
-        image: post.image
-      });
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "Posts"
+        });
+
+        // Find the blog post
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Blog not found' });
+        }
+
+        // Update the post with image URL
+        post.image = result.secure_url;
+        post.public_id = result.public_id;
+        await post.save();
+
+        // Remove the file from local storage
+        await fs.unlink(req.file.path);
+
+        // Respond with success message
+        return res.status(200).json({
+            message: 'Image uploaded successfully',
+            id: post._id,
+            image: post.image
+        });
     } catch (error) {
-      console.error('Upload Error:', error);  // Log the error here
-      return res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Upload Error:', error.message, error.stack);  // Log the error details
+        return res.status(500).json({ message: 'Server error', error: error.message });
     }
-  };
+};
+
   
 
 exports.getBlogs = async (req, res) => {
