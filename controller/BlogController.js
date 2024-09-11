@@ -108,30 +108,31 @@ exports.deleteBlog = async (req, res) => {
         res.status(500).send({ error: "Error deleting blog" });
     }
 };
-
 exports.createComment = async (req, res) => {
     try {
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (!token) return res.status(401).send({ error: "No token provided" });
+        const userId = req.user._id;  // Ensure the user is authenticated
+        const { comment } = req.body; // Get content from request body
+        const blogId = req.params.blog_id; // Get blog ID from URL params
 
-            const userId = req.user._id;
-            const { content} = req.body;
-            const postId = req.params.id;
-    
-            const comment = new Comment({
-                
-                postId, user: userId, content,
-            });
-    
-            await comment.save();
-    
-            res.status(201).json(comment);
-        } catch (error) {
-    
-                res.status(404)
-                res.send({ error: "Post doesn't exist!" })
-        }
+        // Create a new comment
+        const comments = new Comments({
+            blogId, 
+            user: userId, 
+            comment,
+        });
+
+        // Save the comment to the database
+        await comments.save();
+
+        // Send back the comment in response
+        res.status(201).json(comments);
+    } catch (error) {
+        console.error(error);
+        res.status(404).json({ error: "Blog post doesn't exist!" });
     }
+};
+
+
     exports.addlike = async (req, res) => {
         console.log('Add like route hit');
         try {
