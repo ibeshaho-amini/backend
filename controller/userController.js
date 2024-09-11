@@ -50,7 +50,12 @@ exports.loginUser = async (req, res) => {
         const payload = { id: user._id, username: user.username };
         const token = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
 
-        res.send({ token: `Bearer ${token}` });
+        // res.send({ token: `Bearer ${token}` });
+        res.send({ 
+            token: `Bearer ${token}`,
+            redirectTo: '/adminiPanel'  // Add this line to indicate where to redirect
+        });
+        
     } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).send({ error: 'Error logging in' });
