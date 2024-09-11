@@ -8,6 +8,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const app = express();
 const cors = require('cors');
+app.options('*', cors());
 app.use(express.urlencoded({ extended: true }));
 
 // app.use(cors({ origin: '*' }));
@@ -15,6 +16,8 @@ app.use(cors({
   origin: '*',
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
+  preflightContinue: false,
+  optionsSuccessStatus: 204 
 }));
 // Swagger configuration
 const swaggerOptions = {
