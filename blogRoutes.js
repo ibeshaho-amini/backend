@@ -12,7 +12,8 @@ const {
     addlike,
     getCommentsByBlogId,
     updateLike,
-    uploadImageToBlog
+    uploadImageToBlog,
+    countLikes
 } = require('./controller/BlogController');
 const validateAuth = require('./middleware/validateAuth');
 const validateInput = require('./middleware/validateInput');
@@ -54,7 +55,7 @@ router.post('/blogs', validateAuth, validateInput, createBlog);
 
 /**
  * @swagger
- * /blogs/{id}/image:
+ * /blogs/{blog_id}/image:
  *   post:
  *     summary: Upload an image for a blog post
  *     tags: [Blogs]
@@ -83,7 +84,7 @@ router.post('/blogs', validateAuth, validateInput, createBlog);
  *       500:
  *         description: Internal server error.
  */
-router.post('/blogs/:id/image', upload, uploadImageToBlog);
+router.post('/blogs/:blog_id/image', upload, uploadImageToBlog);
 
 /**
  * @swagger
@@ -299,5 +300,44 @@ router.post('/blogs/:blog_id/likes', validateAuth, addlike);
  *         description: Comment not found.
  */
 router.patch('/comments/:comment_id/like', updateLike);
+
+/**
+ * @swagger
+ * /blogs/{blog_id}/likes:
+ *   get:
+ *     summary: Get the number of likes for a specific blog post
+ *     tags: 
+ *       - Likes
+ *     description: Returns the count of likes for the blog post with the given blog_id.
+ *     parameters:
+ *       - in: path
+ *         name: blog_id
+ *         required: true
+ *         description: The ID of the blog post to count likes for.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the like count.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 blogId:
+ *                   type: string
+ *                   description: The ID of the blog post.
+ *                 likeCount:
+ *                   type: integer
+ *                   description: The total number of likes for the blog.
+ *                 example:
+ *                   blogId: "123abc"
+ *                   likeCount: 15
+ *       404:
+ *         description: Blog not found.
+ *       500:
+ *         description: Server error.
+ */
+router.get('/blogs/:blog_id/likes', countLikes);
 
 module.exports = router;

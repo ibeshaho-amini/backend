@@ -110,77 +110,76 @@ exports.deleteBlog = async (req, res) => {
 };
 exports.createComment = async (req, res) => {
     try {
-        const userId = req.user._id;  
-        const { comment } = req.body; 
-        const blogId = req.params.blog_id; 
+        console.log('User:', req.user);  // Log user object
+        console.log('User ID:', req.user.id);  // Log user ID (use `id` instead of `_id`)
+
+        const userId = req.user.id;  // Use `id` since that's how it's stored in the JWT payload
+        const { comment } = req.body; // Get content from request body
+        const blogId = req.params.blog_id; // Get blog ID from URL params
+
+        if (!userId || !blogId) {
+            return res.status(400).json({ error: 'User or Blog ID is missing.' });
+        }
 
         // Create a new comment
         const newComment = new Comments({
-            blogId, 
-            user: userId,  
-            comment,  
+            blogId,
+            user: userId,  // Assign `userId` correctly
+            comment,
         });
 
-       
+        // Save the comment to the database
         await newComment.save();
 
-    
+        // Send back the comment in response
         res.status(201).json(newComment);
     } catch (error) {
-        console.error(error);
+        console.error('Error creating comment:', error);
         res.status(500).json({ error: "Error creating comment" });
     }
 };
 
-// exports.createComment = async (req, res) => {
-//     try {
-//         const userId = req.user._id; 
-//         const { comment } = req.body; 
-//         const blogId = req.params.blog_id;
+exports.addlike = async (req, res) => {
+    console.log('Add like route hit');
+    try {
+        const userId = req.user.id;  // Assuming req.user._id contains the authenticated user ID
+        const blogId = req.params.blog_id; // Get the blog ID from request params
 
-//         const comments = new Comments({
-//             blogId, 
-//             user: userId, 
-//             comment,
-//         });
+        // Check if the like already exists for this blog by this user
+        const existingLike = await Like.findOne({ blog_id: blogId, user_id: userId });
 
-//         await comments.save();
-
-//         res.status(201).json(comments);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(404).json({ error: "Blog post doesn't exist!" });
-//     }
-// };
-
-
-    exports.addlike = async (req, res) => {
-        console.log('Add like route hit');
-        try {
-            const userId = req.user._id;
-           const blogId = req.params.blog_id;
-      
-           const liked = new Like({blogId, user: userId,})
-        //   if (!userId) {
-        //     return res.status(400).json({ message: 'User ID is missing' });
-        //   }
-      
-        //   const liked = await Like.findOne({ blog_id: blogId, user_id: userId });
-      
-          if (liked) {
-            await Like.deleteOne({ _id: liked._id });
+        if (existingLike) {
+            // If the like exists, remove it (toggle off the like)
+            await Like.deleteOne({ _id: existingLike._id });
             res.status(200).json({ message: 'Like removed' });
-          } else {
-            const newLike = new Like({ blog_id: blogId, user_id: userId, like: true });
+        } else {
+            // If the like does not exist, create a new like
+            const newLike = new Like({ blog_id: blogId, user_id: userId });
             await newLike.save();
             res.status(201).json({ message: 'Like added', like: newLike });
-          }
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ message: 'Server error' });
         }
-      };
-      
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Function to count the number of likes for a specific blog
+exports.countLikes = async (req, res) => {
+    try {
+        const blogId = req.params.blog_id;
+
+        // Count the number of likes for the specified blog_id
+        const likeCount = await Like.countDocuments({ blog_id: blogId });
+
+        res.status(200).json({ blogId, likeCount });
+    } catch (error) {
+        console.error("Error counting likes:", error);
+        res.status(500).json({ message: "Error counting likes" });
+    }
+};
+
+
 exports.updateLike = async (req, res) => {
     try {
         const token = req.headers['authorization']?.split(' ')[1];
@@ -213,34 +212,22 @@ exports.updateLike = async (req, res) => {
     }
 };
 
-
-
-
-
-// exports.getCommentsByBlogId = async (req, res) => {
-//     try {
-//         const comments = await Comments.find({ blog_id: req.params.blog_id }).populate('user_id', 'email');
-//         if (!comments || comments.length === 0) return res.status(404).send({ error: "No comments found for this blog" });
-//         res.send(comments);
-//     } catch (error) {
-//         res.status(500).send({ error: "Error retrieving comments" });
-//     }
-// };
 exports.getCommentsByBlogId = async (req, res) => {
     try {
         const blogId = req.params.blog_id;
         console.log("Fetching comments for blog ID:", blogId); // Log the blog ID
 
-        // Check if the blog ID exists in the comments
-        const comments = await Comments.find({ blog_id: blogId });
+        // Check if the blog ID exists in the comments collection
+        const comments = await Comments.find({ blogId });  // Use blogId instead of blog_id
         
         if (!comments || comments.length === 0) {
             return res.status(404).send({ error: "No comments found for this blog" });
         }
-        
+
         res.send(comments);
     } catch (error) {
         console.error("Error retrieving comments:", error); // Log error for debugging
         res.status(500).send({ error: "Error retrieving comments" });
     }
 };
+
