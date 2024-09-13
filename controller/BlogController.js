@@ -110,27 +110,48 @@ exports.deleteBlog = async (req, res) => {
 };
 exports.createComment = async (req, res) => {
     try {
-        const userId = req.user._id;  // Ensure the user is authenticated
-        const { comment } = req.body; // Get content from request body
-        const blogId = req.params.blog_id; // Get blog ID from URL params
+        const userId = req.user._id;  
+        const { comment } = req.body; 
+        const blogId = req.params.blog_id; 
 
         // Create a new comment
-        const comments = new Comments({
+        const newComment = new Comments({
             blogId, 
-            user: userId, 
-            comment,
+            user: userId,  
+            comment,  
         });
 
-        // Save the comment to the database
-        await comments.save();
+       
+        await newComment.save();
 
-        // Send back the comment in response
-        res.status(201).json(comments);
+    
+        res.status(201).json(newComment);
     } catch (error) {
         console.error(error);
-        res.status(404).json({ error: "Blog post doesn't exist!" });
+        res.status(500).json({ error: "Error creating comment" });
     }
 };
+
+// exports.createComment = async (req, res) => {
+//     try {
+//         const userId = req.user._id; 
+//         const { comment } = req.body; 
+//         const blogId = req.params.blog_id;
+
+//         const comments = new Comments({
+//             blogId, 
+//             user: userId, 
+//             comment,
+//         });
+
+//         await comments.save();
+
+//         res.status(201).json(comments);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(404).json({ error: "Blog post doesn't exist!" });
+//     }
+// };
 
 
     exports.addlike = async (req, res) => {
@@ -196,12 +217,30 @@ exports.updateLike = async (req, res) => {
 
 
 
+// exports.getCommentsByBlogId = async (req, res) => {
+//     try {
+//         const comments = await Comments.find({ blog_id: req.params.blog_id }).populate('user_id', 'email');
+//         if (!comments || comments.length === 0) return res.status(404).send({ error: "No comments found for this blog" });
+//         res.send(comments);
+//     } catch (error) {
+//         res.status(500).send({ error: "Error retrieving comments" });
+//     }
+// };
 exports.getCommentsByBlogId = async (req, res) => {
     try {
-        const comments = await Comments.find({ blog_id: req.params.blog_id }).populate('user_id', 'email');
-        if (!comments || comments.length === 0) return res.status(404).send({ error: "No comments found for this blog" });
+        const blogId = req.params.blog_id;
+        console.log("Fetching comments for blog ID:", blogId); // Log the blog ID
+
+        // Check if the blog ID exists in the comments
+        const comments = await Comments.find({ blog_id: blogId });
+        
+        if (!comments || comments.length === 0) {
+            return res.status(404).send({ error: "No comments found for this blog" });
+        }
+        
         res.send(comments);
     } catch (error) {
+        console.error("Error retrieving comments:", error); // Log error for debugging
         res.status(500).send({ error: "Error retrieving comments" });
     }
 };
