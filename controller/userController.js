@@ -21,7 +21,10 @@ exports.createUser = async (req, res) => {
         });
 
         await user.save();
-        res.status(201).send(user);
+        res.status(201).send(user)({ 
+            token: `Bearer ${token}`,
+            redirectTo: '/portfolio/adminiPanel.html' 
+        });
     } catch (error) {
         res.status(500).send({ error: "Error creating user" });
     }
