@@ -179,36 +179,26 @@ exports.countLikes = async (req, res) => {
     }
 };
 
+// exports.countComments = async (req, res) => {
+//     try {
+//         const blog = await Blog.findById(req.params.id);
+//         if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-exports.updateLike = async (req, res) => {
+//         const commentCount = blog.Comments.length;
+//         res.status(200).json({ commentCount });
+//     } catch (err) {
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
+exports.countComments = async (req, res) => {
     try {
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (!token) return res.status(401).send({ error: "No token provided" });
+        const blog = await Blog.findById(req.params.blog_id); // Change this line
+        if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-        const decoded = jwt.verify(token, 'secret_key0987');
-        const userId = decoded.id;
-
-        const { comment_id } = req.params;
-        const { like } = req.body;
-
-        // Validate like input
-        if (typeof like !== 'number' || like < 0) {
-            return res.status(400).send({ error: "Invalid like value" });
-        }
-
-        // Find the comment and update the like field
-        const comment = await Comments.findOneAndUpdate(
-            { _id: comment_id, user_id: userId },
-            { like },
-            { new: true }
-        );
-
-        if (!comment) return res.status(404).send({ error: "Comment not found or not authorized" });
-
-        res.send(comment);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: "Error updating like" });
+        const commentCount = blog.Comments.length;
+        res.status(200).json({ blogId: req.params.blog_id, commentCount }); // Include blogId in response
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 

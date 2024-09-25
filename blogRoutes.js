@@ -11,7 +11,7 @@ const {
     createComment,
     addlike,
     getCommentsByBlogId,
-    updateLike,
+    countComments,
     uploadImageToBlog,
     countLikes
 } = require('./controller/BlogController');
@@ -241,6 +241,43 @@ router.post('/blogs/:blog_id/comments', validateAuth, createComment);
  */
 router.get('/blogs/:blog_id/comments', getCommentsByBlogId);
 
+
+/**
+ * @swagger
+ * /blogs/{blog_id}/comments/Count:
+ *   get:
+ *     summary: Get the number of comments for a specific blog post
+ *     tags: [Comments]
+ *     description: Returns the count of comments for the blog post with the given blog_id.
+ *     parameters:
+ *       - in: path
+ *         name: blog_id
+ *         required: true
+ *         description: The ID of the blog post to count comment for.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the comment count.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 blogId:
+ *                   type: string
+ *                   description: The ID of the blog post.
+ *                 commentCount:
+ *                   type: integer
+ *                   description: The total number of likes for the blog.
+ *       404:
+ *         description: Blog not found.
+ *       500:
+ *         description: Server error.
+ */
+router.get('/blogs/:blog_id/comments/Count', countComments);
+
+
 /**
  * @swagger
  * /blogs/{blog_id}/likes:
@@ -269,37 +306,6 @@ router.get('/blogs/:blog_id/comments', getCommentsByBlogId);
 router.post('/blogs/:blog_id/likes', validateAuth, addlike);
 
 
-/**
- * @swagger
- * /comments/{comment_id}/like:
- *   patch:
- *     summary: Update the like count for a comment
- *     tags: [Comments]
- *     parameters:
- *       - in: path
- *         name: comment_id
- *         required: true
- *         schema:
- *           type: string
- *         description: The comment ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               like:
- *                 type: integer
- *     responses:
- *       200:
- *         description: The like count was updated.
- *       400:
- *         description: Invalid input data.
- *       404:
- *         description: Comment not found.
- */
-router.patch('/comments/:comment_id/like', updateLike);
 
 /**
  * @swagger

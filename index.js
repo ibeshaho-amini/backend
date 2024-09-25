@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const routes1 = require("./userRoutes");
 const routes2 = require("./blogRoutes");
