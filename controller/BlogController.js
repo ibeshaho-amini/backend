@@ -91,6 +91,7 @@ exports.updateBlog = async (req, res) => {
 
         if (req.body.title) post.title = req.body.title;
         if (req.body.content) post.content = req.body.content;
+        if (req.body.author) post.author = req.body.author;
 
         await post.save();
         res.send(post);
@@ -179,17 +180,6 @@ exports.countLikes = async (req, res) => {
     }
 };
 
-// exports.countComments = async (req, res) => {
-//     try {
-//         const blog = await Blog.findById(req.params.id);
-//         if (!blog) return res.status(404).json({ error: 'Blog not found' });
-
-//         const commentCount = blog.Comments.length;
-//         res.status(200).json({ commentCount });
-//     } catch (err) {
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
 exports.countComments = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.blog_id); // Change this line
